@@ -1,0 +1,117 @@
+{
+  "name": "blogto",
+  "displayName": "blogto",
+  "description": "post blog from vscode to medium, dev, hashnode",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.63.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Other"
+  ],
+  "activationEvents": [
+    "onCustomEditor:blogto.editor",
+    "onLanguage:blogto",
+    "onCommand:blogto.open",
+    "onCommand:blogto.getactiveText",
+    "onCommand:blogto.config",
+    "onCommand:blogto.hashnode_getuser",
+    "onCommand:blogto.medium_getuser",
+    "onCommand:blogto.dev_getuser",
+    "onView:blog-sidebar"
+  ],
+  "main": "./dist/extension.js",
+  "Publisher": "Pratik Sharma",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "blog-sidebar",
+          "title": "BlogTo",
+          "icon": "media/logo.svg"
+        }
+      ]
+    },
+    "views": {
+      "blog-sidebar": [
+        {
+          "type": "webview",
+          "id": "blog-sidebar",
+          "name": "blogto",
+          "icon": "media/logo.svg",
+          "contextualTitle": "Blogto"
+        }
+      ]
+    },
+    "menus": {
+      "explorer/context": [
+        {
+          "when": "resourceLangId == markdown",
+          "command": "blogto.open",
+          "group": "navigation"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "blogto.getactiveText",
+        "title": "getActiveText",
+        "category": "blogto"
+      },
+      {
+        "command": "blogto.config",
+        "title": "Config",
+        "category": "blogto"
+      },
+      {
+        "command": "blogto.hashnode_getuser",
+        "title": "Get user from hashnode",
+        "category": "blogto"
+      },
+      {
+        "command": "blogto.dev_getuser",
+        "title": "Get user from dev.to",
+        "category": "blogto"
+      },
+      {
+        "command": "blogto.medium_getuser",
+        "title": "Get user from medium",
+        "category": "blogto"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "webpack",
+    "watch": "webpack --watch",
+    "package": "webpack --mode production --devtool hidden-source-map",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/glob": "^7.1.4",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "14.x",
+    "@types/vscode": "^1.63.0",
+    "@typescript-eslint/eslint-plugin": "^5.1.0",
+    "@typescript-eslint/parser": "^5.1.0",
+    "@vscode/test-electron": "^1.6.2",
+    "eslint": "^8.1.0",
+    "glob": "^7.1.7",
+    "mocha": "^9.1.3",
+    "ts-loader": "^9.2.5",
+    "typescript": "^4.4.4",
+    "webpack": "^5.52.1",
+    "webpack-cli": "^4.8.0"
+  },
+  "dependencies": {
+    "@vscode/webview-ui-toolkit": "^0.8.4",
+    "axios": "^0.24.0",
+    "graphql": "^16.1.0",
+    "graphql-request": "^3.7.0"
+  }
+}
