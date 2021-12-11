@@ -1,6 +1,6 @@
 {
   "name": "blogto",
-  "displayName": "blogto",
+  "displayName": "BlogTo",
   "description": "post blog from vscode to medium, dev, hashnode",
   "version": "0.0.1",
   "engines": {
@@ -13,7 +13,7 @@
   "activationEvents": [
     "onCustomEditor:blogto.editor",
     "onLanguage:blogto",
-    "onCommand:blogto.open",
+    "onCommand:blogto.helloWorld",
     "onCommand:blogto.getactiveText",
     "onCommand:blogto.config",
     "onCommand:blogto.hashnode_getuser",
@@ -44,15 +44,6 @@
         }
       ]
     },
-    "menus": {
-      "explorer/context": [
-        {
-          "when": "resourceLangId == markdown",
-          "command": "blogto.open",
-          "group": "navigation"
-        }
-      ]
-    },
     "commands": [
       {
         "command": "blogto.getactiveText",
@@ -77,6 +68,11 @@
       {
         "command": "blogto.medium_getuser",
         "title": "Get user from medium",
+        "category": "blogto"
+      },
+      {
+        "command": "blogto.helloWorld",
+        "title": "hello world",
         "category": "blogto"
       }
     ]

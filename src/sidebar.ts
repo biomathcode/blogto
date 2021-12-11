@@ -4,6 +4,7 @@ import { getNonce } from './getNonce';
 
 import { dev_API_URL, medium_API_URL, postToDev, postToMedium } from './utils';
 import { LocalStorageService } from './storage';
+import { getUri } from './utilities/getUri';
 
 function stringToArray(word: string, chr: string) {
     const array = word.split(chr);
@@ -26,7 +27,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
             localResourceRoots: [this._extensionUri],
         };
 
-        webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
+        webviewView.webview.html = this._getHtmlForWebview(webviewView.webview, this._extensionUri);
 
         webviewView.webview.onDidReceiveMessage(async (message) => {
             switch (message.command) {
@@ -116,117 +117,127 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         this._view = panel;
     }
 
-    private _getHtmlForWebview(webview: vscode.Webview) {
+    private _getHtmlForWebview(webview: vscode.Webview, extensionUri: vscode.Uri) {
+
+        const toolkitUri = getUri(webview, extensionUri, [
+            "node_modules",
+            "@vscode",
+            "webview-ui-toolkit",
+            "dist",
+            "toolkit.js",
+        ])
         // Use a nonce to only allow a specific script to be run.
 
-        const styleResetUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'reset.css'));
-        const styleVSCodeUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'vscode.css'));
+        const stylesUri = getUri(webview, extensionUri, ["media", "sideview.css"]);
 
-        const sidebarcss = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'sideview.css'));
+        const mainUri = getUri(webview, extensionUri, ["media","sideview.js"]);
 
-        const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'sideview.js'));
-        const nonce = getNonce();
-
-        return `<!DOCTYPE html>
+        return /*html*/ `
+        <!DOCTYPE html>
 			<html lang="en">
 			<head>
 				<meta charset="UTF-8">
-      
-
-        <meta http-equiv="Content-Security-Policy" content="img-src https: data:; style-src 'unsafe-inline' ${webview.cspSource}; script-src 'nonce-${nonce}';">
 				<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-                <link href="${styleResetUri}" rel="stylesheet">
-				<link href="${styleVSCodeUri}" rel="stylesheet">
-				<link href="${sidebarcss}" rel="stylesheet">
-
-
+                <script type="module" src="${toolkitUri}"></script>
+                <script type="module" src="${mainUri}"></script>
+                <link rel="stylesheet" href="${stylesUri}">
+                <title>BlogTo </title>
 			</head>
       <body>
+      
+      <vscode-panels activeid="dev" aria-label="With Complex Content">
+        <vscode-panel-tab id="dev">Dev.to</vscode-panel-tab>
+        <vscode-panel-tab id="medium">MEDIUM</vscode-panel-tab>
+        <vscode-panel-tab id="hashnode">Hashnode</vscode-panel-tab>
 
-      <div class="tab tab-container">
-        <button class="tablinks" id="dev" > Dev </button>
-        <button class="tablinks" id="medium" >Medium</button>
-        <button class="tablinks" id="hashnode" >Hashnode</button>
-    </div>
+        <vscode-panel-view id="dev">
         
-    <div id="Dev" class="tabcontent">
-    
-        <h2>dev to</h2>
-    
-        <form action="post" id="dev_">
-        <div>
-        <label for="title">title</label><br>
-        <input type="text" id="dev-title" name="title" /><br>
-        </div>
-    
-        <div>
-        <label for="publish">Publish:</label>
-    
-        <select name="publish" id="dev-publish">
-                <option value="false">false</option>
-            <option value="true">true</option>
-        </select>
-        </div>
-        <div>
-            <label for="tags">tags(eg.. react, javascript)</label><br>
-            <input  type="tags" id="dev-tags" name="tags"/><br>
-        </div>
-        <button type="submit" id="dev-btn" >Submit</button>
-    
-        </form>
-    </div>
-        <div id="Medium" class="tabcontent">
-            <h2>Medium</h2>
-            <form method="post" id="medium_">
-                <div>
-                  <label for="title">medium title</label><br>
-                 <input type="text" id="medium-title" name="medium-title" /><br>
-                </div>
+            <div id="Dev" class="tabcontent">
+            <h3>dev to</h3>
+            <form action="post" id="dev_">
+            <vscode-text-area type="text" id="dev-title" name="title">
+            title
+            </vscode-text-area>
+            <div class="flex-r js">
+            <label for="publish">Publish:</label>
+            <vscode-dropdown name="publish" id="dev-publish">
+                    <vscode-option value="false">false</vscode-option>
+                <vscode-option value="true">true</vscode-option>
+            </vscode-dropdown>
+            </div>
             <div>
-                <label for="tags">tags</label><br>
-                <input  type="tags" id="medium-tags" name="tags"/><br>
+                <vscode-text-area  type="tags" id="dev-tags" name="tags"
+                placeholder="typescript, java"
+                >
+                Tags
+                </vscode-text-area>
             </div>
-            <div class="flex-row">
-            <label for="publishStatus">publishStatus</label><br>
-
-            <select name="publishStatus" id="medium-publishStatus">
-
-                <option value="public">public</option>
-                <option value="draft">draft</option>
-                <option value="unlisted">unlisted</option>
-            </select>
-            </div>
-            <div class="flex-row">
-            <label for="notifyFollowers">notify Followers</label><br>
-            <select name="notifyFollowers" id="medium-notifyFollowers">
-            
-                <option value="false">False</option>
-                <option value="true">True</option>
-            </select>
-            </div>
-            <button type="submit">Submit</button>
+            <vscode-button type="submit" id="dev-btn" >Submit</vscode-button>
             </form>
         </div>
+        </vscode-panel-view>
 
-        <div id="Hashnode" class="tabcontent">
+        <vscode-panel-view id="medium">
+ 
+            <div id="Medium" class="tabcontent">
+            <h3>Medium</h3>
+            <form method="post" id="medium_">
+                
+                 <vscode-text-area type="text" id="medium-title">
+                    Title
+                 </vscode-text-area>
+
+                 <div >
+            <label for="Publish">Publish:</label><br>
+
+            <vscode-dropdown name="publishStatus" id="medium-publishStatus">
+                <vscode-option value="draft">Draft</vscode-option>
+                <vscode-option value="unlisted">Unlisted</vscode-option>
+                <vscode-option value="public">Public</vscode-option>
+            </vscode-dropdown>
+            </div>
+               
+                <vscode-text-area  type="tags" id="medium-tags"
+                placeholder="typescript, java"
+                >
+                Tags
+                </vscode-text-area>
+           
+            
+            <div class="flex-row">
+            <label for="notifyFollowers">Notify:  </label><br>
+            <vscode-dropdown name="notifyFollowers" id="medium-notifyFollowers">
+                <vscode-option value="false">False</vscode-option>
+                <vscode-option value="true">True</vscode-option>
+            </vscode-dropdown>
+            </div>
+            <vscode-button type="submit">Submit</vscode-button>
+            </form>
+        </div>
+                
+          
+        </vscode-panel-view>
+
+        <vscode-panel-view id="hashnode">
+            <div id="Hashnode" class="tabcontent">
             <h3>Hashnode</h3>
             <form method="post" id="hashnode_">
-                <div>
-                <label for="title">title</label><br>
-                <input type="text" id="title" name="title" /><br>
-                </div>
-                <div>
-            <label for="tags">tags</label><br>
-            <input  type="tags" id="tags" name="tags"/><br>
-        </div>
-        <button type="submit">Submit</button>
+           
+                <vscode-text-area type="text" id="title" name="title">
+                Title
+                </vscode-text-area>
+            <vscode-text-area  type="tags" id="tags" name="tags"
+            placeholder="typescript, java"
+            >
+            Tags
+            </vscode-text-area>
+
+        <vscode-button type="submit">Submit</vscode-button>
             </form>
         </div>
-
-
+            
+        </vscode-panel-view>
         	</body>
-            <script nonce="${nonce}" src="${scriptUri}"></script>
 
 			</html>`;
     }
