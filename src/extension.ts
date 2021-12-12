@@ -26,6 +26,7 @@ export function activate(context: vscode.ExtensionContext) {
 
             if (hashnodeUsername && hashnodeApiToken) {
                 const result = await getuserhashnode(hashnodeUsername, hashnodeApiToken, hashnodeApiUrl);
+     
                 vscode.window.showInformationMessage(
                     JSON.stringify(result) ? 'Successfully added user info' : 'failed',
                 );

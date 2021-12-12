@@ -28,56 +28,6 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         webviewView.webview.html = this._getHtmlForWebview(webviewView.webview, this._extensionUri);
 
 
-
-
-
-
-        const devUser = LocalStorageService.getValue('DEV_USER');
-
-        const mediumUser = LocalStorageService.getValue('MEDIUM_USER');
-    
-        const hashnodeUser = LocalStorageService.getValue('HASHNODE_USER');
-
-    
-        if(devUser) {
-            console.log("dev_user_info", devUser);
-            const user = JSON.parse(devUser);
-        
-            webviewView.webview.postMessage({
-            command: 'DEV_USER',
-            name: user.name,
-            profile: user.profile_image,
-            username: user.username
-          });
-        }
-    
-        if (mediumUser) {
-            console.log("medium_user_info", mediumUser);
-            const user = JSON.parse(mediumUser);
-            webviewView.webview.postMessage({
-            command: 'MEDIUM_USER',
-            name: user.name,
-            username: user.username,
-            profile: user.imageUrl
-          });
-        }
-    
-        if(hashnodeUser) {
-            const user = JSON.parse(hashnodeUser);
-            console.log("hashnode_user_info", hashnodeUser);
-            
-            webviewView.webview.postMessage({
-            command: 'HASHNODE_USER',
-            name: user.name,
-            username: user.username,
-            profile: user.photo,
-            publicationTitle: user.publication.title,
-            publicationId: user.publication._id
-            
-          });
-        }
-
-
         webviewView.webview.onDidReceiveMessage(async (message) => {
             switch (message.command) {
                 case 'alert': {
@@ -185,6 +135,15 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
         const mainUri = getUri(webview, extensionUri, ["media", "sideview.js"]);
 
+        const devUser = JSON.parse(
+        LocalStorageService.getValue('DEV_USER') || ""
+        );
+
+        const mediumUser = JSON.parse(LocalStorageService.getValue('MEDIUM_USER') || ""); 
+
+        const hashnodeUser = JSON.parse(LocalStorageService.getValue('HASHNODE_USER') || "");
+
+
         return /*html*/ `
         <!DOCTYPE html>
 			<html lang="en">
@@ -200,15 +159,17 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
       <section>
       
 
-      <vscode-panels activeid="dev" >
+      <vscode-panels activeid="dev" class="container" >
 
         <vscode-panel-tab id="dev">Dev.to</vscode-panel-tab>
         <vscode-panel-tab id="medium">MEDIUM</vscode-panel-tab>
         <vscode-panel-tab id="hashnode">Hashnode</vscode-panel-tab>
         <vscode-panel-view id="dev">
         <div>
-
-            <div class="flex-row" id="dev_user"></div>
+            <div class="flex-row" style="display: ${!devUser ? "none": null}">
+                <img src="${devUser?.profile_image}"/>
+                <h5>${devUser?.name}</h5>
+            </div>
             <form action="post" id="dev_">
             <vscode-text-area type="text" id="dev-title" name="title">
             Title
@@ -234,8 +195,11 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
         <vscode-panel-view id="medium">
         <div>
+        <div class="flex-row" style="display: ${!mediumUser ? "none": null}">
+        <img src="${mediumUser?.imageUrl}"/>
+        <h5>${mediumUser?.name}</h5>
+    </div>
  
-            <div id="medium_user" class="flex-row"></div>
             <form method="post" id="medium_">
                 
                  <vscode-text-area type="text" id="medium-title">
@@ -273,7 +237,13 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
         <vscode-panel-view id="hashnode">
         <div>
-            <div id="hashnode_user" class="flex-row"></div>
+        <div class="flex-row" style="display: ${!hashnodeUser ? "none": null}">
+            <img src="${hashnodeUser?.photo}" />
+            <h5>${hashnodeUser?.name}</h5>
+        </div>
+        <p>${hashnodeUser?.publication.title}</p>
+
+        
             <form method="post" id="hashnode_">
            
                 <vscode-text-area type="text" id="title" name="title">
@@ -284,11 +254,24 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
             >
             Tags
             </vscode-text-area>
+            <vscode-text-field type="text" id="coverImage" name="coverImageUrl">
+                Cover Image Url
+        </vscode-text-field>
+        <div>
 
+        <label for="visibleHashnode">
+        Visible on hashnode
+        </label>
+        <vscode-dropdown name="visibleHashnode" id="hashnodeVisibility">
+        <vscode-option value="false">False</vscode-option>
+        <vscode-option value="true">True</vscode-option>
+    </vscode-dropdown>
+    </div>
         <vscode-button type="submit">Submit</vscode-button>
             </form>
         </div>
         </vscode-panel-view>
+        
 
     </vscode-panels>
 

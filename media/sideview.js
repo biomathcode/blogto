@@ -59,18 +59,7 @@
     window.addEventListener('message', event => {
         const message = event.data; 
         switch (message.command) {
-            case 'DEV_USER': 
-                console.log('dev from js', message);
-                createProfile(message.profile, message.name,"dev_user");
-                break;
-            case 'MEDIUM_USER':
-                console.log('medium from js', message);
-                createProfile(message.profile, message.name, "medium_user");
-                break;
-            case 'HASHNODE_USER':
-                console.log('hashnode from js', message);
-                createProfile(message.profile, message.name, "hashnode_user");
-                break;
+   
             case 'alert':
                 break;
             case 'dev':

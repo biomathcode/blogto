@@ -2,25 +2,14 @@ import axios from 'axios';
 import { LocalStorageService } from './storage';
 import * as vscode from 'vscode';
 
-interface Request {
-    username?: string;
-    apiUrl: string;
-    apiToken: string;
-}
 
-const hashnodeUsername: string = 'pratiksharm';
-
-const hashnodeApiToken: string = '80458ae0-c222-4f7d-80f1-cb1da6e1f678';
 
 export const hashnodeApiUrl: string = 'https://api.hashnode.com';
-
-export const devApiToken: string = 'GbK2jc26was1Uhh8Dtb3oS4c';
 
 export const devApiUrl: string = 'https://dev.to/api';
 
 export const mediumApiUrl: string = 'https://api.medium.com/v1';
 
-const mediumApiToken: string = '2e5c442b93cb141e668c5949c721c0457c0d976309b2443bd0250bcc84d9ef4b7';
 
 export const getuserhashnode = async (username: string, apiToken: string, apiUrl: string) => {
     const user = await axios({
@@ -70,8 +59,8 @@ export const getUserMedium = async (apiUrl: string, apiToken: string) => {
         },
     });
 
-    console.log(user.data.data);
-    LocalStorageService.setValue('MEDIUM_USER', JSON.stringify(user.data.data));
+   
+    return LocalStorageService.setValue('MEDIUM_USER', JSON.stringify(user.data.data));
 };
 
 export const getuserDev = async (apiUrl: string, apiToken: string) => {
@@ -83,9 +72,7 @@ export const getuserDev = async (apiUrl: string, apiToken: string) => {
         },
     });
 
-    console.log(user.data);
-
-    LocalStorageService.setValue('DEV_USER', JSON.stringify(user.data));
+    return LocalStorageService.setValue('DEV_USER', JSON.stringify(user.data));
 };
 
 export const postToDev = async (
