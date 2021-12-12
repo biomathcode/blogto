@@ -15,10 +15,11 @@
     "onLanguage:blogto",
     "onCommand:blogto.helloWorld",
     "onCommand:blogto.getactiveText",
-    "onCommand:blogto.config",
+    "onCommand:blogto.openconfig",
     "onCommand:blogto.hashnode_getuser",
     "onCommand:blogto.medium_getuser",
     "onCommand:blogto.dev_getuser",
+    "onCommand:blogto.user_info",
     "onView:blog-sidebar"
   ],
   "main": "./dist/extension.js",
@@ -51,7 +52,12 @@
         "category": "blogto"
       },
       {
-        "command": "blogto.config",
+        "command": "blogto.user_info",
+        "title": "get user info stored in the local session",
+        "category": "blogto"
+      },
+      {
+        "command": "blogto.openconfig",
         "title": "Config",
         "category": "blogto"
       },

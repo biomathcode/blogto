@@ -4,30 +4,30 @@ import * as vscode from 'vscode';
 
 interface Request {
     username?: string;
-    api_url: string;
-    api_token: string;
+    apiUrl: string;
+    apiToken: string;
 }
 
-const hashnode_USERNAME: string = 'pratiksharm';
+const hashnodeUsername: string = 'pratiksharm';
 
-const hashnode_API_TOKEN: string = '80458ae0-c222-4f7d-80f1-cb1da6e1f678';
+const hashnodeApiToken: string = '80458ae0-c222-4f7d-80f1-cb1da6e1f678';
 
-export const hashnode_API_URL: string = 'https://api.hashnode.com';
+export const hashnodeApiUrl: string = 'https://api.hashnode.com';
 
-export const dev_API_TOKEN: string = 'GbK2jc26was1Uhh8Dtb3oS4c';
+export const devApiToken: string = 'GbK2jc26was1Uhh8Dtb3oS4c';
 
-export const dev_API_URL: string = 'https://dev.to/api';
+export const devApiUrl: string = 'https://dev.to/api';
 
-export const medium_API_URL: string = 'https://api.medium.com/v1';
+export const mediumApiUrl: string = 'https://api.medium.com/v1';
 
-const medium_API_TOKEN: string = '2e5c442b93cb141e668c5949c721c0457c0d976309b2443bd0250bcc84d9ef4b7';
+const mediumApiToken: string = '2e5c442b93cb141e668c5949c721c0457c0d976309b2443bd0250bcc84d9ef4b7';
 
-export const getuserhashnode = async (username: string, api_token: string, api_url: string) => {
+export const getuserhashnode = async (username: string, apiToken: string, apiUrl: string) => {
     const user = await axios({
-        url: api_url,
+        url: apiUrl,
         headers: {
             'Content-Type': 'application/json',
-            Authorization: api_token,
+            Authorization: apiToken,
         },
         method: 'POST',
         data: {
@@ -56,58 +56,58 @@ export const getuserhashnode = async (username: string, api_token: string, api_u
 
     console.log(user.data.data.user);
 
-    LocalStorageService.setValue('hashnode_USER', JSON.stringify(user.data));
+    LocalStorageService.setValue('HASHNODE_USER', JSON.stringify(user.data.data.user));
 
     return user.data.data.user;
 };
 
-export const getuserMedium = async (api_url: string, api_token: string) => {
+export const getUserMedium = async (apiUrl: string, apiToken: string) => {
     const user = await axios({
-        baseURL: api_url,
+        baseURL: apiUrl,
         url: '/me',
         headers: {
-            Authorization: `Bearer ${api_token}`,
+            Authorization: `Bearer ${apiToken}`,
         },
     });
 
     console.log(user.data.data);
-    LocalStorageService.setValue('medium_USER', JSON.stringify(user.data.data));
+    LocalStorageService.setValue('MEDIUM_USER', JSON.stringify(user.data.data));
 };
 
-export const getuserDev = async (api_url: string, api_token: string) => {
+export const getuserDev = async (apiUrl: string, apiToken: string) => {
     const user = await axios({
-        baseURL: api_url,
+        baseURL: apiUrl,
         url: '/users/me',
         headers: {
-            'api-key': api_token,
+            'api-key': apiToken,
         },
     });
 
     console.log(user.data);
 
-    LocalStorageService.setValue('dev_USER', JSON.stringify(user.data));
+    LocalStorageService.setValue('DEV_USER', JSON.stringify(user.data));
 };
 
 export const postToDev = async (
-    api_url: string,
-    api_token: string,
+    apiUrl: string,
+    apiToken: string,
     title: string,
-    body_markdown: string,
+    bodyMarkdown: string,
     tags: Array<string>,
     published: boolean,
     series: string,
 ) => {
     const post = await axios({
-        url: api_url + '/articles',
+        url: apiUrl + '/articles',
         headers: {
-            'api-key': api_token,
+            'api-key': apiToken,
         },
         method: 'POST',
         data: {
             article: {
                 title: title,
                 published: published,
-                body_markdown: body_markdown,
+                body_markdown: bodyMarkdown,
                 tags: tags,
                 series: series,
             },
@@ -119,8 +119,8 @@ export const postToDev = async (
 };
 
 export const postToMedium = async (
-    api_url: string,
-    api_token: string,
+    apiUrl: string,
+    apiToken: string,
     userID: string,
     title: string,
     contentFormat: string,
@@ -130,10 +130,10 @@ export const postToMedium = async (
     notifyFollowers: boolean,
 ) => {
     const post = await axios({
-        baseURL: api_url,
+        baseURL: apiUrl,
         url: `/users/${userID}/posts`,
         headers: {
-            Authorization: `Bearer ${api_token}`,
+            Authorization: `Bearer ${apiToken}`,
         },
         method: 'POST',
         data: {
@@ -152,14 +152,24 @@ export const postToMedium = async (
     return post.data.data.url;
 };
 
-export const postToHashnode = async (api_url: string, api_token: string) => {
+export const postToHashnode = async (apiUrl: string, apiToken: string) => {
     const post = await axios({
-        url: api_url,
+        url: apiUrl,
         headers: {
-            'Content-Type': 'application/json',
-            Authorization: api_token,
+            "Content-Type": 'application/json',
+            "Authorization": apiToken,
         },
         method: 'POST',
         data: {},
     });
+};
+
+
+export const allUserInfo = async () => {
+    const hashnodeUser = await LocalStorageService.getValue('HASHNODE_USER');
+    const devUser = await LocalStorageService.getValue('DEV_USER');
+    const mediumUser = await LocalStorageService.getValue('MEDIUM_USER');
+
+    console.log(hashnodeUser, devUser, mediumUser);
+    return ;
 };

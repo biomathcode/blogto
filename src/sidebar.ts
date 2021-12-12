@@ -1,8 +1,6 @@
 import * as vscode from 'vscode';
 
-import { getNonce } from './getNonce';
-
-import { dev_API_URL, medium_API_URL, postToDev, postToMedium } from './utils';
+import {  devApiUrl, mediumApiUrl, postToDev, postToMedium } from './utils';
 import { LocalStorageService } from './storage';
 import { getUri } from './utilities/getUri';
 
@@ -29,21 +27,77 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
         webviewView.webview.html = this._getHtmlForWebview(webviewView.webview, this._extensionUri);
 
+
+
+
+
+
+        const devUser = LocalStorageService.getValue('DEV_USER');
+
+        const mediumUser = LocalStorageService.getValue('MEDIUM_USER');
+    
+        const hashnodeUser = LocalStorageService.getValue('HASHNODE_USER');
+
+    
+        if(devUser) {
+            console.log("dev_user_info", devUser);
+            const user = JSON.parse(devUser);
+        
+            webviewView.webview.postMessage({
+            command: 'DEV_USER',
+            name: user.name,
+            profile: user.profile_image,
+            username: user.username
+          });
+        }
+    
+        if (mediumUser) {
+            console.log("medium_user_info", mediumUser);
+            const user = JSON.parse(mediumUser);
+            webviewView.webview.postMessage({
+            command: 'MEDIUM_USER',
+            name: user.name,
+            username: user.username,
+            profile: user.imageUrl
+          });
+        }
+    
+        if(hashnodeUser) {
+            const user = JSON.parse(hashnodeUser);
+            console.log("hashnode_user_info", hashnodeUser);
+            
+            webviewView.webview.postMessage({
+            command: 'HASHNODE_USER',
+            name: user.name,
+            username: user.username,
+            profile: user.photo,
+            publicationTitle: user.publication.title,
+            publicationId: user.publication._id
+            
+          });
+        }
+
+
         webviewView.webview.onDidReceiveMessage(async (message) => {
             switch (message.command) {
                 case 'alert': {
                     vscode.window.showInformationMessage(message.text);
                 }
+                case 'config': {
+                    vscode.commands.executeCommand('blogto.openconfig');
+                    vscode.window.showInformationMessage(message.text);
+
+                }
                 case 'dev': {
                     vscode.window.showInformationMessage(message.text);
                 }
                 case 'postToMedium': {
-                    const medium_API_TOKEN = await LocalStorageService.getValue('mediumAPI_TOKEN');
-                    const api_url = await medium_API_URL;
+                    const mediumApiToken = await LocalStorageService.getValue('mediumAPI_TOKEN');
+                    const apiUrl = await mediumApiUrl;
 
                     const userInfo = await LocalStorageService.getValue('medium_USER');
 
-                    if (userInfo && medium_API_TOKEN && api_url) {
+                    if (userInfo && mediumApiToken && apiUrl) {
                         const userData = JSON.parse(userInfo);
 
                         vscode.window.showInformationMessage('posted to medium');
@@ -61,8 +115,8 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                         const notifyFollowers: boolean = message.notifyFollowers === 'true' ? true : false;
 
                         const data = await postToMedium(
-                            api_url,
-                            medium_API_TOKEN,
+                            apiUrl,
+                            mediumApiToken,
                             userData.id,
                             title,
                             contentFormat,
@@ -76,8 +130,8 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                     }
                 }
                 case 'postToDev': {
-                    const dev_API_TOKEN = await LocalStorageService.getValue('devAPI_TOKEN');
-                    const api_url = await dev_API_URL;
+                    const devApiToken = await LocalStorageService.getValue('devAPI_TOKEN');
+                    const apiUrl = await devApiUrl;
                     const title = message.title;
                     const bodymarkdown: string = vscode.window.activeTextEditor?.document.getText() || ' ';
 
@@ -85,10 +139,10 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
                     const tags = stringToArray(message.tags, ',');
 
-                    console.log(dev_API_TOKEN, api_url, title, bodymarkdown, tags, message.publish);
+                    console.log(devApiToken, apiUrl, title, bodymarkdown, tags, message.publish);
 
-                    if (dev_API_TOKEN) {
-                        const data = await postToDev(api_url, dev_API_TOKEN, title, bodymarkdown, tags, publish, ' ');
+                    if (devApiToken) {
+                        const data = await postToDev(apiUrl, devApiToken, title, bodymarkdown, tags, publish, ' ');
 
                         vscode.window.showInformationMessage(data.url);
                     } else {
@@ -125,12 +179,11 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
             "webview-ui-toolkit",
             "dist",
             "toolkit.js",
-        ])
-        // Use a nonce to only allow a specific script to be run.
+        ]);
 
         const stylesUri = getUri(webview, extensionUri, ["media", "sideview.css"]);
 
-        const mainUri = getUri(webview, extensionUri, ["media","sideview.js"]);
+        const mainUri = getUri(webview, extensionUri, ["media", "sideview.js"]);
 
         return /*html*/ `
         <!DOCTYPE html>
@@ -144,21 +197,23 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                 <title>BlogTo </title>
 			</head>
       <body>
+      <section>
       
-      <vscode-panels activeid="dev" aria-label="With Complex Content">
+
+      <vscode-panels activeid="dev" >
+
         <vscode-panel-tab id="dev">Dev.to</vscode-panel-tab>
         <vscode-panel-tab id="medium">MEDIUM</vscode-panel-tab>
         <vscode-panel-tab id="hashnode">Hashnode</vscode-panel-tab>
-
         <vscode-panel-view id="dev">
-        
-            <div id="Dev" class="tabcontent">
-            <h3>dev to</h3>
+        <div>
+
+            <div class="flex-row" id="dev_user"></div>
             <form action="post" id="dev_">
             <vscode-text-area type="text" id="dev-title" name="title">
-            title
+            Title
             </vscode-text-area>
-            <div class="flex-r js">
+            <div class="flex-row js">
             <label for="publish">Publish:</label>
             <vscode-dropdown name="publish" id="dev-publish">
                     <vscode-option value="false">false</vscode-option>
@@ -178,9 +233,9 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         </vscode-panel-view>
 
         <vscode-panel-view id="medium">
+        <div>
  
-            <div id="Medium" class="tabcontent">
-            <h3>Medium</h3>
+            <div id="medium_user" class="flex-row"></div>
             <form method="post" id="medium_">
                 
                  <vscode-text-area type="text" id="medium-title">
@@ -196,9 +251,8 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                 <vscode-option value="public">Public</vscode-option>
             </vscode-dropdown>
             </div>
-               
                 <vscode-text-area  type="tags" id="medium-tags"
-                placeholder="typescript, java"
+                placeholder="typescript, java "
                 >
                 Tags
                 </vscode-text-area>
@@ -214,13 +268,12 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
             <vscode-button type="submit">Submit</vscode-button>
             </form>
         </div>
-                
           
         </vscode-panel-view>
 
         <vscode-panel-view id="hashnode">
-            <div id="Hashnode" class="tabcontent">
-            <h3>Hashnode</h3>
+        <div>
+            <div id="hashnode_user" class="flex-row"></div>
             <form method="post" id="hashnode_">
            
                 <vscode-text-area type="text" id="title" name="title">
@@ -235,8 +288,13 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         <vscode-button type="submit">Submit</vscode-button>
             </form>
         </div>
-            
         </vscode-panel-view>
+
+    </vscode-panels>
+
+        <vscode-button type="button" id="config">config</vscode-button>
+        </section>
+
         	</body>
 
 			</html>`;
