@@ -2,6 +2,29 @@ import axios from 'axios';
 import { LocalStorageService } from './storage';
 import * as vscode from 'vscode';
 
+//TODO: organise the request with interfaces
+interface ApiCall {
+    apiUrl: string
+    apiToken: string
+}
+
+interface PostToDev extends ApiCall {
+    title: string,
+    bodyMarkdown: string,
+    published: boolean,
+    series: string
+}
+
+interface PostToMedium {
+    apiUrl: string;
+    apiToken: string;
+    userId: string;
+    title: string;
+    contentFormat: "markdown" | "html";
+    publishStatus: "draft" | "public" | "unlisted";
+    notifyFollowers: boolean
+
+}
 
 
 export const hashnodeApiUrl: string = 'https://api.hashnode.com';
@@ -9,6 +32,7 @@ export const hashnodeApiUrl: string = 'https://api.hashnode.com';
 export const devApiUrl: string = 'https://dev.to/api';
 
 export const mediumApiUrl: string = 'https://api.medium.com/v1';
+
 
 
 export const getuserhashnode = async (username: string, apiToken: string, apiUrl: string) => {
@@ -27,6 +51,7 @@ export const getuserhashnode = async (username: string, apiToken: string, apiUrl
                 username
                 photo
                 location
+                publicationDomain
                 
                 publication {
                   _id
@@ -75,6 +100,8 @@ export const getuserDev = async (apiUrl: string, apiToken: string) => {
     return LocalStorageService.setValue('DEV_USER', JSON.stringify(user.data));
 };
 
+
+
 export const postToDev = async (
     apiUrl: string,
     apiToken: string,
@@ -105,15 +132,17 @@ export const postToDev = async (
     return post.data;
 };
 
+
+
 export const postToMedium = async (
     apiUrl: string,
     apiToken: string,
     userID: string,
     title: string,
-    contentFormat: string,
+    contentFormat: "markdown" | "html",
     content: string,
     tags: Array<String>,
-    publishStatus: string,
+    publishStatus: "draft" | "public" | "unlisted",
     notifyFollowers: boolean,
 ) => {
     const post = await axios({
@@ -138,8 +167,71 @@ export const postToMedium = async (
 
     return post.data.data.url;
 };
+export const postToHashnodeStory =async (apiUrl:string, 
+    apiToken: string,
+    publicationId: string,
+    tags: Array<Object>,
+    title: string,
+    markdown: string,
+    slug: string,
 
-export const postToHashnode = async (apiUrl: string, apiToken: string) => {
+    ) => {
+    const userWebsite = JSON.parse(
+    LocalStorageService.getValue('HASHNODE_USER') || ""
+    );
+
+    const draft = await axios({
+        url: apiUrl,
+        headers: {
+            "Content-Type": 'application/json',
+            "Authorization": apiToken,
+        },
+        method: 'POST',
+        data: {
+            query: `
+            mutation {
+                createPublicationStory(
+                  publicationId: "${publicationId}",
+                  input: {
+                    title:"${title}",
+                    slug:"${slug}",
+                    contentMarkdown: "${markdown}",
+                    tags: "${tags}"
+                  }
+                ) {
+                  success
+                  post {
+                  slug
+                  }
+                }
+              }
+            `
+        },
+    });
+    console.log(draft);
+    const postSlug = draft.data.data.post.slug;
+    const postUrl = `https://${userWebsite?.website}/${postSlug}`;
+
+    vscode.window.showInformationMessage(draft.data.data.message ,postUrl);
+
+};
+
+
+//draft most redirect https://hashnode.com/@{Username}
+// post redirect to https://{userWebsite}.com/{slug}
+
+
+export const postToHashnode = async (
+    apiUrl: string,
+    apiToken: string,
+    title: string,
+    slug: string,
+    markdown: string,
+    coverImageUrl: string,
+    tags: Array<Object>,
+
+
+    ) => {
     const post = await axios({
         url: apiUrl,
         headers: {
@@ -147,7 +239,24 @@ export const postToHashnode = async (apiUrl: string, apiToken: string) => {
             "Authorization": apiToken,
         },
         method: 'POST',
-        data: {},
+        data: {
+            query: `
+            mutation{
+                createStory(
+                    input: {
+                        title: "${title}"
+                        slug: "${slug}"
+                        contentMarkdown: "${markdown}"
+                        coverImageUrl : "${coverImageUrl}"
+                        tags: ${tags}
+                    }
+
+                )
+            }
+            
+            `
+
+        },
     });
 };
 
