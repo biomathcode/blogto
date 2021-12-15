@@ -18,6 +18,12 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(helloworld);
 
     context.subscriptions.push(
+        vscode.commands.registerCommand('blogto.getActiveText', async () => {
+            console.log(vscode.window.activeTextEditor?.document.languageId)
+        })
+    )
+
+    context.subscriptions.push(
         vscode.commands.registerCommand('blogto.hashnode_getuser', async () => {
             vscode.window.showInformationMessage('working on your request');
             const hashnodeApiToken = await LocalStorageService.getValue('HASHNODE_API_TOKEN');

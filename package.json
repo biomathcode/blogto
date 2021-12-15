@@ -14,7 +14,7 @@
     "onCustomEditor:blogto.editor",
     "onLanguage:blogto",
     "onCommand:blogto.helloWorld",
-    "onCommand:blogto.getactiveText",
+    "onCommand:blogto.getActiveText",
     "onCommand:blogto.openconfig",
     "onCommand:blogto.hashnode_getuser",
     "onCommand:blogto.medium_getuser",
@@ -47,7 +47,7 @@
     },
     "commands": [
       {
-        "command": "blogto.getactiveText",
+        "command": "blogto.getActiveText",
         "title": "getActiveText",
         "category": "blogto"
       },

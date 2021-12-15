@@ -14,6 +14,16 @@ img {
 }
 
 .container {
-   
     width: auto;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.tagLabel {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
 }

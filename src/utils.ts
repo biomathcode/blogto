@@ -84,7 +84,7 @@ export const getUserMedium = async (apiUrl: string, apiToken: string) => {
         },
     });
 
-   
+
     return LocalStorageService.setValue('MEDIUM_USER', JSON.stringify(user.data.data));
 };
 
@@ -128,7 +128,11 @@ export const postToDev = async (
         },
     });
     console.log(post.data.url, post.status);
-    vscode.window.showInformationMessage(post.data.url);
+    if (published) {
+        vscode.window.showInformationMessage("Your post is published!!!", post.data.url);
+    } else {
+        vscode.window.showInformationMessage('Visit the dashboard to complete your post', "https://dev.to/dashboard");
+    }
     return post.data;
 };
 
@@ -167,20 +171,21 @@ export const postToMedium = async (
 
     return post.data.data.url;
 };
-export const postToHashnodeStory =async (apiUrl:string, 
+export const postToHashnodePublish = async (apiUrl: string,
     apiToken: string,
     publicationId: string,
     tags: Array<Object>,
     title: string,
     markdown: string,
     slug: string,
-
-    ) => {
-    const userWebsite = JSON.parse(
-    LocalStorageService.getValue('HASHNODE_USER') || ""
+    coverImageUrl: string,
+    visibility: boolean,
+) => {
+    const user = JSON.parse(
+        LocalStorageService.getValue('HASHNODE_USER') || ""
     );
 
-    const draft = await axios({
+    const post = await axios({
         url: apiUrl,
         headers: {
             "Content-Type": 'application/json',
@@ -189,14 +194,24 @@ export const postToHashnodeStory =async (apiUrl:string,
         method: 'POST',
         data: {
             query: `
-            mutation {
+            mutation createStoryPublication(
+                $title: String!,
+                $publicationId:String!,
+                $slug:String,
+                $markdown:String!,
+                $tags: [TagsInput]!,
+                $visibility:Boolean,
+                $coverImage:String
+              ) {
                 createPublicationStory(
-                  publicationId: "${publicationId}",
+                  publicationId: $publicationId
+                  hideFromHashnodeFeed: $visibility
                   input: {
-                    title:"${title}",
-                    slug:"${slug}",
-                    contentMarkdown: "${markdown}",
-                    tags: "${tags}"
+                    title: $title
+                    slug:$slug
+                    contentMarkdown: $markdown
+                    tags: $tags
+                    coverImageURL: $coverImage 
                   }
                 ) {
                   success
@@ -205,14 +220,23 @@ export const postToHashnodeStory =async (apiUrl:string,
                   }
                 }
               }
-            `
+            `,
+            variables: {
+                title: title, 
+                tags: tags, 
+                markdown:markdown, 
+                publicationId:publicationId,
+                coverImage: coverImageUrl,
+                slug: slug,
+                visibility: visibility,
+            }
         },
     });
-    console.log(draft);
-    const postSlug = draft.data.data.post.slug;
-    const postUrl = `https://${userWebsite?.website}/${postSlug}`;
+    console.log(post);
+    const postSlug = post.data.data.createPublicationStory.post.slug;
+    const postUrl = `https://coolhead.in/${postSlug}`;
 
-    vscode.window.showInformationMessage(draft.data.data.message ,postUrl);
+    return postUrl;
 
 };
 
@@ -230,8 +254,11 @@ export const postToHashnode = async (
     coverImageUrl: string,
     tags: Array<Object>,
 
+) => {
+    console.log(apiToken, apiUrl, title, slug, coverImageUrl, tags);
 
-    ) => {
+
+
     const post = await axios({
         url: apiUrl,
         headers: {
@@ -241,23 +268,45 @@ export const postToHashnode = async (
         method: 'POST',
         data: {
             query: `
-            mutation{
-                createStory(
-                    input: {
-                        title: "${title}"
-                        slug: "${slug}"
-                        contentMarkdown: "${markdown}"
-                        coverImageUrl : "${coverImageUrl}"
-                        tags: ${tags}
-                    }
-
-                )
+mutation  createStory(
+  $title: String!,
+  $slug:String,
+  $markdown:String!, 
+	$tags:[TagsInput]!,
+  $coverImageUrl:String
+){
+  createStory(
+    input: {
+      title: $title
+      slug: $slug
+      contentMarkdown: $markdown
+      coverImageURL: $coverImageUrl
+      tags: $tags
+    }
+  ){
+    success
+    message
+    post{
+      slug
+    }
+    
+  }
+}            
+            `,
+            variables: {
+                title: title,
+                slug: slug,
+                markdown: markdown,
+                tags: tags,
+                coverImageUrl: coverImageUrl
             }
-            
-            `
 
         },
     });
+
+    console.log(post);
+
+    return post;
 };
 
 
@@ -267,5 +316,5 @@ export const allUserInfo = async () => {
     const mediumUser = await LocalStorageService.getValue('MEDIUM_USER');
 
     console.log(hashnodeUser, devUser, mediumUser);
-    return ;
+    return;
 };
