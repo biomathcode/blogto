@@ -44,10 +44,11 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
                 }
                 case 'postToMedium': {
-                    const mediumApiToken = await LocalStorageService.getValue('MEDIUM_API_TOKEN');
-                    const apiUrl = await mediumApiUrl;
+                    const mediumApiToken =  LocalStorageService.getValue('MEDIUM_API_TOKEN');
+                    const apiUrl =  mediumApiUrl;
 
-                    const userInfo = await LocalStorageService.getValue('MEDIUM_USER');
+                  
+                    const userInfo =  LocalStorageService.getValue('MEDIUM_USER');
 
                     if(vscode.window.activeTextEditor?.document.languageId !== "markdown") {
                       return vscode.window.showInformationMessage('Please open markdown file in the active text editor');
@@ -91,9 +92,10 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                             publishStatus,
                             notifyFollowers,
                         );
+                        console.log(data);
 
 
-                        return vscode.window.showInformationMessage(data);
+                        return vscode.window.showInformationMessage('posted to medium');
                     }
                     break;
                 }
@@ -224,13 +226,21 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
         const mainUri = getUri(webview, extensionUri, ["media", "sideview.js"]);
 
-        const devUser = JSON.parse(
-        LocalStorageService.getValue('DEV_USER') || ""
-        );
-
-        const mediumUser = JSON.parse(LocalStorageService.getValue('MEDIUM_USER') || ""); 
-
-        const hashnodeUser = JSON.parse(LocalStorageService.getValue('HASHNODE_USER') || "");
+        let devUser, mediumUser, hashnodeUser;
+        
+        if(LocalStorageService.getValue('DEV_USER')) {
+          devUser = LocalStorageService.getValue('DEV_USER');
+          devUser = JSON.parse(devUser || " ");
+        }
+        
+        if(LocalStorageService.getValue('MEDIUM_USER')){
+         mediumUser = LocalStorageService.getValue('MEDIUM_USER');
+          mediumUser = JSON.parse(mediumUser || " ");
+        }
+        if(LocalStorageService.getValue('HASHNODE_USER')) {
+         hashnodeUser = LocalStorageService.getValue('HASHNODE_USER');
+          hashnodeUser = JSON.parse(hashnodeUser || " ");
+        }
 
         const hashnodeTags = [
             {
@@ -327,9 +337,6 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 				<meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <script type="module" src="${toolkitUri}"></script>
                 <script type="module" src="${mainUri}"></script>
-                <script src="https://cdn.jsdelivr.net/npm/@kleimaj/multiselect.js@1.0.8/js/multiselect.min.js"></script>
-                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@kleimaj/multiselect.js@1.0.8/css/style.min.css">
-
                 <link rel="stylesheet" href="${stylesUri}">
                 <title>BlogTo </title>
 			</head>

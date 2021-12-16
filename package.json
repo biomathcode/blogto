@@ -2,10 +2,12 @@
   "name": "blogto",
   "displayName": "BlogTo",
   "description": "post blog from vscode to medium, dev, hashnode",
-  "version": "0.0.1",
+  "version": "0.5.1",
   "engines": {
     "vscode": "^1.63.0"
   },
+  "icon": "logo.png",
+  "repository": {"url": "https://github.com/pratiksharm/blogto"},
   "categories": [
     "Programming Languages",
     "Other"
@@ -23,7 +25,7 @@
     "onView:blog-sidebar"
   ],
   "main": "./dist/extension.js",
-  "Publisher": "Pratik Sharma",
+  "publisher": "coolhead",
   "contributes": {
     "viewsContainers": {
       "activitybar": [
