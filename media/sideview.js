@@ -25,6 +25,8 @@
             tags.disabled = true;
             return;
         }
+
+        
         const tagExists = tagList.some(tag => tag._id === e.target.value);
 
         if(tagExists){

@@ -435,9 +435,9 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         <div id="tagLabel" class="tagLabel">
         </div>
         <div class="flex-column">
-        <code>
+        <label for="select-tags">
         Tag
-        </code>
+        </label>
         <select id="select-tags" >
           ${ 
               hashnodeTags.map((tag) => {
@@ -473,8 +473,12 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
       <vscode-text-field type="text" id="hashnode-slug" name="slug">
       slug
   </vscode-text-field>
+  <div>
+  <vscode-button id="hashnode-btn" >Post</vscode-button>
 
-        <vscode-button id="hashnode-btn" >Post</vscode-button>
+
+  </div>
+
             </form>
         </div>
         </vscode-panel-view>
