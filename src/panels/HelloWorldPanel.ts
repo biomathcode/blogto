@@ -111,10 +111,7 @@ export class HelloWorldPanel {
   private _getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri) {
     // Tip: Install the es6-string-html VS Code extension to enable code highlighting below
     const toolkitUri = getUri(webview, extensionUri, [
-      "node_modules",
-      "@vscode",
-      "webview-ui-toolkit",
-      "dist",
+     "media",
       "toolkit.js",
     ]);
     const mainUri = getUri(webview, extensionUri, ["media", "main.js"]);

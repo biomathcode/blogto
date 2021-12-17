@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { SidebarProvider } from './sidebar';
 import { LocalStorageService } from './storage';
-import { showInputBox } from './quickpick';
+
 import { allUserInfo, devApiUrl, getuserDev, getuserhashnode, getUserMedium, hashnodeApiUrl, mediumApiUrl } from './utils';
 
 import { HelloWorldPanel } from "./panels/HelloWorldPanel";
@@ -69,28 +69,6 @@ export function activate(context: vscode.ExtensionContext) {
             } else {
                 vscode.window.showInformationMessage('Please set configs for medium');
             }
-        }),
-    );
-
-    // config
-    context.subscriptions.push(
-        vscode.commands.registerCommand('blogto.config', async () => {
-            const options = ['hashnode', 'dev', 'Medium'].map((label) => ({
-                label,
-            }));
-            const quickPick = await vscode.window.createQuickPick();
-            quickPick.items = options;
-            quickPick.onDidChangeSelection(([{ label }]) => {
-                vscode.window.showInformationMessage(label);
-                if (label === 'hashnode') {
-                    showInputBox(' Paste your hashnode api here ', label);
-                } else if (label === 'dev') {
-                    showInputBox(' Paste your dev.to api token here', label);
-                } else {
-                    showInputBox(' Paste your medium api token here', label);
-                }
-            });
-            quickPick.show();
         }),
     );
 }

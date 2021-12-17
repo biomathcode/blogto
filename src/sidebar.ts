@@ -26,8 +26,6 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         webviewView.webview.options = {
             // Allow scripts in the webview
             enableScripts: true,
-
-            localResourceRoots: [this._extensionUri],
         };
 
         webviewView.webview.html = this._getHtmlForWebview(webviewView.webview, this._extensionUri);
@@ -215,12 +213,10 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     private _getHtmlForWebview(webview: vscode.Webview, extensionUri: vscode.Uri) {
 
         const toolkitUri = getUri(webview, extensionUri, [
-            "node_modules",
-            "@vscode",
-            "webview-ui-toolkit",
-            "dist",
+            "media",
             "toolkit.js",
         ]);
+        
 
         const stylesUri = getUri(webview, extensionUri, ["media", "sideview.css"]);
 
@@ -351,10 +347,13 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         <vscode-panel-tab id="hashnode">Hashnode</vscode-panel-tab>
         <vscode-panel-view id="dev">
         <div>
-            <div class="flex-row" style="display: ${!devUser ? "none": null}">
+        ${devUser && 
+          `<div class="flex-row" style="display: ${!devUser ? "none": null}">
                 <img src="${devUser?.profile_image}"/>
                 <h5>${devUser?.name}</h5>
-            </div>
+            </div>`
+        }
+            
             <form action="post" id="dev_">
             <vscode-text-area type="text" id="dev-title" name="title">
             Title
@@ -380,11 +379,16 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
         <vscode-panel-view id="medium">
         <div>
-        <div class="flex-row" style="display: ${!mediumUser ? "none": null}">
+        ${ mediumUser && 
+          `
+          <div class="flex-row" style="display: ${!mediumUser ? "none": null}">
         <img src="${mediumUser?.imageUrl}"/>
         <h5>${mediumUser?.name}</h5>
     </div>
-  
+          
+          `           
+        }
+        
             <form method="post" id="medium_">
                 
                  <vscode-text-area type="text" id="medium-title">
@@ -423,13 +427,17 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
         <vscode-panel-view id="hashnode">
         <div>
-        <div class="flex-row" style="display: ${!hashnodeUser ? "none": null}">
-            <img src="${hashnodeUser?.photo}" />
-            <h5>${hashnodeUser?.name}</h5>
-        </div>
-        <p id="hashnode-publication" value=${hashnodeUser?.publication._id}>${hashnodeUser?.publication.title}</p>
-
-        
+        ${ hashnodeUser && 
+          `
+          <div class="flex-row" style="display: ${!hashnodeUser ? "none": null}">
+          <img src="${hashnodeUser?.photo}" />
+          <h5>${hashnodeUser?.name}</h5>
+      </div>
+      <p id="hashnode-publication" value=${hashnodeUser?.publication._id}>${hashnodeUser?.publication.title}</p>
+      </div>
+          `
+        }
+        <div>
             <form method="post" id="hashnode_">
            
                 <vscode-text-area type="text" id="hashnode-title" name="title">

@@ -2,12 +2,14 @@
   "name": "blogto",
   "displayName": "BlogTo",
   "description": "post blog from vscode to medium, dev, hashnode",
-  "version": "0.5.1",
+  "version": "0.5.4",
   "engines": {
     "vscode": "^1.63.0"
   },
   "icon": "logo.png",
-  "repository": {"url": "https://github.com/pratiksharm/blogto"},
+  "repository": {
+    "url": "https://github.com/pratiksharm/blogto"
+  },
   "categories": [
     "Programming Languages",
     "Other"
@@ -114,8 +116,6 @@
   },
   "dependencies": {
     "@vscode/webview-ui-toolkit": "^0.8.4",
-    "axios": "^0.24.0",
-    "graphql": "^16.1.0",
-    "graphql-request": "^3.7.0"
+    "axios": "^0.24.0"
   }
 }
