@@ -131,11 +131,12 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           if (vscode.window.activeTextEditor?.document.languageId !== "markdown") {
             return vscode.window.showInformationMessage('Please open markdown file in the active text editor');
           }
+          const hashnodeUsername = LocalStorageService.getValue('HASHNODE_USERNAME');
 
 
-          const hashnodeApiToken = await LocalStorageService.getValue('HASHNODE_API_TOKEN');
+          const hashnodeApiToken =  LocalStorageService.getValue('HASHNODE_API_TOKEN');
 
-          const apiUrl = await hashnodeApiUrl;
+          const apiUrl =  hashnodeApiUrl;
           const title = message.title;
           const bodymarkdown: string = vscode.window.activeTextEditor?.document.getText() || ' ';
 
@@ -191,7 +192,13 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                 coverImageUrl,
                 tags
               );
-              vscode.window.showInformationMessage('post to hashnode', `https://hashnode.com/@pratiksharm`);
+              vscode.window.showInformationMessage('Continue writing your post!', `https://hashnode.com/@pratiksharm`)
+              .then((selection) => {
+                if(selection === 'click here'){
+                  const url = `https://hashnode.com/${hashnodeUsername}`;
+                  return vscode.env.openExternal(vscode.Uri.parse(url));
+                }
+              });
 
               return post;
             }
