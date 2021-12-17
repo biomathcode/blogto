@@ -1,8 +1,29 @@
+.profile {
+    width: 190px;
+    text-align: center;
+    align-content: center;
+    align-items: center;
+}
+.publication {
+    text-align: center;
+}
+.js {
+    justify-content: space-evenly;
+}
+.je {
+    justify-content: space-between;
+}
+
+.space-a {
+    margin-top: 10px;
+}
+.space-b {
+    margin-bottom: 10px;
+}
 
 .flex-row {
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
 }
 img {
     height: 30px;
@@ -20,6 +41,13 @@ img {
 .flex-column {
     display: flex;
     flex-direction: column;
+}
+.select-tags {
+    max-width: 100px;
+    
+}
+.select-tags > .option {
+    max-width: 100px;
 }
 
 .tagLabel {

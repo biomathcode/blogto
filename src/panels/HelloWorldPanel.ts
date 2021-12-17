@@ -55,8 +55,7 @@ export class HelloWorldPanel {
   
           switch (command) {
             case "hello":
-              // Code that should run in response to the hello message command
-              vscode.window.showInformationMessage(text);
+              
               return;
             case "configSetup": 
 
@@ -96,9 +95,10 @@ export class HelloWorldPanel {
 
               if (LocalStorageService.getValue('HASHNODE_USERNAME') && LocalStorageService.getValue('HASHNODE_API_TOKEN')) {
                 vscode.commands.executeCommand('blogto.hashnode_getuser');
+                vscode.window.showInformationMessage('hashnode user is fetched');
+
               }
 
-              vscode.window.showInformationMessage(text);
               return ;
           }
         },
@@ -130,11 +130,21 @@ export class HelloWorldPanel {
           <title>Config page</title>
         </head>
         <body>
-          <h1>Config</h1>
-          <vscode-text-field id="dev_api_token">Dev.to api token</vscode-text-field>
-          <vscode-text-field id="medium_api_token">Medium api token</vscode-text-field>
-          <vscode-text-field id="hashnode_username">Hashnode username</vscode-text-field>
-          <vscode-text-field id="hashnode_api_token">Hashonde api token</vscode-text-field>
+          <h3>Config</h3>
+          <div>
+            <vscode-text-field id="dev_api_token">Dev.to api token</vscode-text-field>
+            <vscode-link href="https://dev.to/settings/account">dev.to token link</vscode-link>
+          </div>
+          <div>
+            <vscode-text-field id="medium_api_token">Medium api token</vscode-text-field>
+            <vscode-link href="https://medium.com/me/settings">medium token link</vscode-link>
+          </div>
+          <div>
+            <vscode-text-field id="hashnode_username">Hashnode username</vscode-text-field>
+            <vscode-text-field id="hashnode_api_token">Hashonde api token</vscode-text-field>
+            <vscode-link href="https://hashnode.com/settings/developer">medium token link</vscode-link>
+
+          </div>
           <div>
 
           <vscode-button id="save">Save </vscode-button>

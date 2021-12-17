@@ -12,14 +12,8 @@
 
     const tagLabel = document.getElementById('tagLabel');
 
-   
-
-
     let tagList = [];  
 
-    
-
-    
     tags.addEventListener('change', function (e) {
         if(tagList.length >= 5) {
             tags.disabled = true;
@@ -116,9 +110,9 @@
         const title = document.getElementById('hashnode-title').value;
         const publish = document.getElementById('hashnode-publish').value;
 
-        const visibility = document.getElementById('hashnode-visibility').value;
+        const visibility = document.getElementById('hashnode-visibility')?.value;
         const coverImageUrl = document.getElementById('hashnode-cover')?.value;
-        const slug = document.getElementById('hashnode-slug').value;
+        const slug = document.getElementById('hashnode-slug')?.value;
 
         const publicationId = document.getElementById('hashnode-publication').getAttribute('value');
         

@@ -34,7 +34,6 @@ export const devApiUrl: string = 'https://dev.to/api';
 export const mediumApiUrl: string = 'https://api.medium.com/v1';
 
 
-
 export const getuserhashnode = async (username: string, apiToken: string, apiUrl: string) => {
     const user = await axios({
         url: apiUrl,
@@ -129,9 +128,20 @@ export const postToDev = async (
     });
     console.log(post.data.url, post.status);
     if (published) {
-        vscode.window.showInformationMessage("Your post is published!!!", post.data.url);
+        vscode.window.showInformationMessage("Your post is published!!!", 'click here')
+        .then(selection =>{
+            if(selection === 'click here') {
+                vscode.env.openExternal(vscode.Uri.parse(post.data.url));
+            }
+        });
+
     } else {
-        vscode.window.showInformationMessage('Visit the dashboard to complete your post', "https://dev.to/dashboard");
+        vscode.window.showInformationMessage('Visit the dashboard to complete your post', 'click here')
+        .then(selection =>{
+            if(selection === 'click here') {
+                vscode.env.openExternal(vscode.Uri.parse("https://dev.to/dashboard"));
+            }
+        });
     }
     return post.data;
 };
@@ -167,7 +177,14 @@ export const postToMedium = async (
     });
 
     console.log(post.data.data, post.data.data.url, post.status);
-    vscode.window.showInformationMessage(post.data.data.url);
+    const url = post.data.data.url; 
+    vscode.window.showInformationMessage('Continue/Update your post','click here')
+    .then(selection => {
+        if(selection === "click here") {
+            vscode.env.openExternal(vscode.Uri.parse(url));
+        }
+    }
+       );
 
     return post.data.data.url;
 };
@@ -234,10 +251,20 @@ export const postToHashnodePublish = async (apiUrl: string,
     });
     console.log(post);
     const postSlug = post.data.data.createPublicationStory.post.slug;
-    const postUrl = `https://coolhead.in/${postSlug}`;
+    const publicationDomain = user?.publicationDomain;
+    if(publicationDomain && postSlug) {
+    const postUrl = `https://${publicationDomain}/${postSlug}`;
+    vscode.window.showInformationMessage('Continue writing your blog here', "click here")
+        .then(selection => {
+            if(selection === "click here"){
+                vscode.env.openExternal(vscode.Uri.parse(postUrl));
 
-    return postUrl;
-
+            }
+        });
+        return postUrl;
+    }else {
+        vscode.window.showErrorMessage('No publication doamin found');
+    }
 };
 
 
@@ -256,8 +283,6 @@ export const postToHashnode = async (
 
 ) => {
     console.log(apiToken, apiUrl, title, slug, coverImageUrl, tags);
-
-
 
     const post = await axios({
         url: apiUrl,
@@ -305,6 +330,7 @@ mutation  createStory(
     });
 
     console.log(post);
+    console.log(post.data?.data?.createStory.post.slug);
 
     return post;
 };

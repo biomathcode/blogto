@@ -11,11 +11,11 @@ export function activate(context: vscode.ExtensionContext) {
     const sidebarProvider = new SidebarProvider(context.extensionUri);
     context.subscriptions.push(vscode.window.registerWebviewViewProvider('blog-sidebar', sidebarProvider));
 
-    const helloworld = vscode.commands.registerCommand("blogto.openconfig", () => {
+    const openConfig = vscode.commands.registerCommand("blogto.openconfig", () => {
         HelloWorldPanel.render(context.extensionUri);
     });
 
-    context.subscriptions.push(helloworld);
+    context.subscriptions.push(openConfig);
 
     context.subscriptions.push(
         vscode.commands.registerCommand('blogto.getActiveText', async () => {
