@@ -143,11 +143,21 @@ export class HelloWorldPanel {
             <vscode-text-field id="hashnode_username">Hashnode username</vscode-text-field>
             <vscode-text-field id="hashnode_api_token">Hashonde api token</vscode-text-field>
             <vscode-link href="https://hashnode.com/settings/developer">medium token link</vscode-link>
-
           </div>
+
           <div>
 
-          <vscode-button id="save">Save </vscode-button>
+          <vscode-button id="save"> Save </vscode-button>
+          <section>
+          <h4>Some things to know</h4>
+          <div >
+            <p> Only markdown file in the active editor will be posted. </p>
+            <p> Atmost 5 tags are allowed similar to medium, dev.to and hashnode</p>
+            <p> If you can see your profile image and name, that means your config is correct and ready to post staff</p>
+            <p> Images will not be uploaded to any of the platform(working on it)</p>
+            <p> If you face any issues or bugs email me: pratik@coolhead.in or sharma.pratik2016@gmail.com</p>
+          </div>
+          </section>
           </div>
         </body>
       </html>

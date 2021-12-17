@@ -357,6 +357,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
       <body>
       <section>
       <vscode-button type="button" id="config">config</vscode-button>
+      <vscode-divider></vscode-divider>
 
       
 
@@ -455,7 +456,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                 <h5>${hashnodeUser?.name}</h5>
             </div>
             <div class="publication">
-                <p id="hashnode-publication" value=${hashnodeUser?.publication._id}>${hashnodeUser?.publication.title}</p>
+                <vscode-tag  id="hashnode-publication" value=${hashnodeUser?.publication._id}>${hashnodeUser?.publication.title}</vscode-tag>
             </div>
           </div>
           `
