@@ -156,6 +156,16 @@ export class HelloWorldPanel {
             <p> If you can see your profile image and name, that means your config is correct and ready to post staff</p>
             <p> Images will not be uploaded to any of the platform(working on it)</p>
             <p> If you face any issues or bugs email me: pratik@coolhead.in or sharma.pratik2016@gmail.com</p>
+            <div>
+              <p>If you want to raise a issue, or look at the github repo.</p>
+              <vscode-link href="https://github.com/pratiksharm/blogto">click here</vscode-link>
+            </div>
+            <div>
+              <p>Buy me a coffee
+              <vscode-link href="https://www.buymeacoffee.com/biomathcode">click here</vscode-link>
+              </p>
+              
+            </div>
           </div>
           </section>
           </div>

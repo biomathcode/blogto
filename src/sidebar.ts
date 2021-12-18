@@ -456,7 +456,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                 <h5>${hashnodeUser?.name}</h5>
             </div>
             <div class="publication">
-                <vscode-tag  id="hashnode-publication" value=${hashnodeUser?.publication._id}>${hashnodeUser?.publication.title}</vscode-tag>
+                <vscode-tag  id="hashnode-publication" value=${hashnodeUser?.publication._id || hashnodeUser?.publication[0]?._id}>${hashnodeUser?.publication.title || hashnodeUser?.publication[0]?.title}</vscode-tag>
             </div>
           </div>
           `
