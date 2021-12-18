@@ -1,15 +1,19 @@
-# blogto README
 
 ## BlogTo is a simple vscode extension which helps your post your ideas from vscode. 
+
+Write your blogs in a markdown file. Open blogto from sidebar view. You will be able to post your markdown content from the vscode to hashnode, medium or dev.to. 
 
 
 Reasons to use the extension 
 
 - Its in your favourite texteditor
 - avoids openning multiple tabs :(
-- Having bloging ideas but not working on them
+- post to hashnode, medium or dev.to
+
 
 ## Features
+
+![screenshot](ScreenShot.png)
 
 Features (0.5.0): 
 
@@ -21,14 +25,15 @@ Features (0.5.0):
 
 ## Requirements
 
-Setup up : 
+### Setup up : 
 
 1. Download the extension here 
-2. Click on the config button, set up the api tokens for medium,dev. to and hashnode.
-    1. This will fetch your data and save it localSession in vscode
+2. Open blogto from the sidebar view.
+3. Click on the config button, set up the api tokens for medium,dev. to and hashnode.
+    1. This will fetch your data and save it to localSession in vscode
     2. To reset you can submit the details again.
-3. Start posting blogs
-4. Issues and Error, contact : pratik@coolhead.in, github here
+4. Start posting blogs
+5. Issues and Error, contact : pratik@coolhead.in, github here
 
 
 ## Extension Settings

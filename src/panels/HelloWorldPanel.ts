@@ -77,6 +77,7 @@ export class HelloWorldPanel {
               LocalStorageService.setValue('DEV_API_TOKEN', message.devApiToken);
               LocalStorageService.getValue('DEV_API_TOKEN') && vscode.commands.executeCommand('blogto.dev_getuser').then(() => {
                 vscode.window.showInformationMessage('dev user is fetched');
+                vscode.commands.executeCommand('workbench.action.reloadWindow');
               });
 
               })()
@@ -88,6 +89,8 @@ export class HelloWorldPanel {
               LocalStorageService.setValue('MEDIUM_API_TOKEN', message.mediumApiToken);
               LocalStorageService.getValue('MEDIUM_API_TOKEN') && vscode.commands.executeCommand('blogto.medium_getuser').then(() => {
                 vscode.window.showInformationMessage('medium user is fetched');
+                vscode.commands.executeCommand('workbench.action.reloadWindow');
+
               });
               })()
               :
@@ -96,6 +99,8 @@ export class HelloWorldPanel {
               if (LocalStorageService.getValue('HASHNODE_USERNAME') && LocalStorageService.getValue('HASHNODE_API_TOKEN')) {
                 vscode.commands.executeCommand('blogto.hashnode_getuser');
                 vscode.window.showInformationMessage('hashnode user is fetched');
+
+                vscode.commands.executeCommand('workbench.action.reloadWindow');
 
               }
 

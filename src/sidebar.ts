@@ -382,15 +382,15 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
             <div class="flex-row je space-a">
             <label for="publish">Publish:</label>
             <vscode-dropdown name="publish" id="dev-publish">
-                    <vscode-option value="false">false</vscode-option>
-                <vscode-option value="true">true</vscode-option>
+                    <vscode-option value="false">Draft</vscode-option>
+                <vscode-option value="true">Public</vscode-option>
             </vscode-dropdown>
             </div>
             <div>
                 <vscode-text-area cols="35"  type="tags" id="dev-tags" name="tags"
                 placeholder="typescript, java"
                 >
-                Tags
+                Tags (separated by comma)
                 </vscode-text-area>
             </div>
             <vscode-button  id="dev-btn" >Post</vscode-button>
@@ -413,7 +413,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
             <form method="post" id="medium_">
                 
                  <vscode-text-area cols="35" type="text" id="medium-title">
-                    Title
+                    Title(Required)
                  </vscode-text-area>
 
                  <div class="flex-row je space-a" >
@@ -465,7 +465,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
             <form method="post" id="hashnode_">
            
                 <vscode-text-area cols="35" type="text" id="hashnode-title" name="title">
-                Title
+                Title(Required)
                 </vscode-text-area>
             
             <vscode-text-field size="35" type="text" id="hashnode-cover" name="coverImageUrl">
@@ -475,7 +475,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
             </div>
         <div class="flex-column">
                 <label for="select-tags">
-                Tag
+                Tag(Required)
                 </label>
                 <select id="select-tags" >
                   ${hashnodeTags.map((tag) => {
@@ -503,8 +503,8 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
             Publish
         </label>
         <vscode-dropdown name="hashnode-publish" id="hashnode-publish">
-            <vscode-option value="false">False</vscode-option>
-            <vscode-option value="true">True</vscode-option>
+            <vscode-option value="false">Draft</vscode-option>
+            <vscode-option value="true">Public</vscode-option>
         </vscode-dropdown>
     </div>
       <vscode-text-field size="35" type="text" id="hashnode-slug" name="slug">
