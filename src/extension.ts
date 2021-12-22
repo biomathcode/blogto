@@ -19,9 +19,9 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(
         vscode.commands.registerCommand('blogto.getActiveText', async () => {
-            console.log(vscode.window.activeTextEditor?.document.languageId)
+            console.log(vscode.window.activeTextEditor?.document.languageId);
         })
-    )
+    );
 
     context.subscriptions.push(
         vscode.commands.registerCommand('blogto.hashnode_getuser', async () => {

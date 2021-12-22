@@ -188,6 +188,7 @@ export const postToMedium = async (
 
     return post.data.data.url;
 };
+
 export const postToHashnodePublish = async (apiUrl: string,
     apiToken: string,
     publicationId: string,
