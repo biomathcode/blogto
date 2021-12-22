@@ -152,7 +152,7 @@ export class HelloWorldPanel {
           <div >
             <p> Only markdown file in the active editor will be posted. </p>
             <p> Atmost 5 tags are allowed similar to medium, dev.to and hashnode</p>
-            <p> If you can see your profile image and name, that means your config is correct and ready to post staff</p>
+            <p> After setting config details.Restart vscode.If you can see your profile image and name, that means your config is correct and ready to post staff</p>
             <p> Images will not be uploaded to any of the platform(working on it)</p>
             <p> If you face any issues or bugs email me: pratik@coolhead.in or sharma.pratik2016@gmail.com</p>
             <div>
