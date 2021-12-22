@@ -178,7 +178,7 @@ export const postToMedium = async (
 
     console.log(post.data.data, post.data.data.url, post.status);
     const url = post.data.data.url; 
-    vscode.window.showInformationMessage('Continue/Update your post','click here')
+    vscode.window.showInformationMessage('Continue/Update your post',"click here")
     .then(selection => {
         if(selection === "click here") {
             vscode.env.openExternal(vscode.Uri.parse(url));

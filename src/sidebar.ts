@@ -192,7 +192,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                 coverImageUrl,
                 tags
               );
-              vscode.window.showInformationMessage('Continue writing your post!', `https://hashnode.com/@pratiksharm`)
+              vscode.window.showInformationMessage('Continue writing your post!', 'click here')
               .then((selection) => {
                 if(selection === 'click here'){
                   const url = `https://hashnode.com/${hashnodeUsername}`;
