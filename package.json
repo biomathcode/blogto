@@ -2,7 +2,7 @@
   "name": "blogto",
   "displayName": "BlogTo",
   "description": "post blog from vscode to medium, dev, hashnode",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "engines": {
     "vscode": "^1.63.0"
   },
